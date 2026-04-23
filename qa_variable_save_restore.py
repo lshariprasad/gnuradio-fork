@@ -131,17 +131,9 @@ class QaVariableSaveRestore(unittest.TestCase):
         )
 
     def _state_file(self):
-        """
-        Return the path that the block should have written its YAML state to.
-
-        The block names its file after the flowgraph ID.  Both .yaml and .yml
-        extensions are accepted so the helper checks both.
-        """
-        for ext in (".yaml", ".yml"):
-            path = os.path.join(self._state_dir, _FLOWGRAPH_ID + ext)
-            if os.path.isfile(path):
-                return path
-        return os.path.join(self._state_dir, _FLOWGRAPH_ID + ".yaml")
+        return os.path.join(
+             self._state_dir, "saverestore", _FLOWGRAPH_ID + ".yml"
+    )
 
     def _load_state(self):
         """Read and parse the YAML state file; return as a dict."""
@@ -149,20 +141,14 @@ class QaVariableSaveRestore(unittest.TestCase):
         self.assertTrue(
             os.path.isfile(path),
             msg=f"Expected state file not found: {path}\n"
-                f"Contents of {self._state_dir}: {os.listdir(self._state_dir)}",
+                f"Contents of {self._state_dir}: {list(os.walk(self._state_dir))}",
         )
         with open(path) as fh:
             return yaml.safe_load(fh) or {}
 
     def _write_state(self, data: dict):
-        """
-        Pre-populate the state file before running the flowgraph.
-
-        This is used by the restore test to inject a known value so we can
-        confirm the block reads it back instead of using the compile-time
-        default.
-        """
-        path = os.path.join(self._state_dir, _FLOWGRAPH_ID + ".yaml")
+        path = self._state_file()
+        os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w") as fh:
             yaml.dump(data, fh)
 

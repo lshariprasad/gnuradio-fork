@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# CMakeLists.txt for grc/tests
+#
+# Each GR_ADD_TEST entry below registers a Python unittest with CTest.
+# The GR_STATE_PATH environment variable is overridden per-test so that
+# the variable_save_restore tests never touch the developer's home directory.
+#
+
+include(GrTest)
+
+# -------------------------------------------------------------------------
+# variable_save_restore QA
+#
+# The test script drives grcc to compile test_variable_save_restore.grc,
+# then executes the resulting flowgraph with GR_STATE_PATH pointed at a
+# temporary directory it creates at setUp time.
+# -------------------------------------------------------------------------
+GR_ADD_TEST(
+    qa_variable_save_restore
+    ${PYTHON_EXECUTABLE}
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_variable_save_restore.py
+)
+
+# Make the .grc fixture available next to the installed test script so grcc
+# can locate it via the __file__-relative path used in the Python test.
+install(
+    FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/test_variable_save_restore.grc
+    DESTINATION
+        ${GR_TEST_INSTALL_PATH}
+    COMPONENT testing
+)

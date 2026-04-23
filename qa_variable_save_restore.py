@@ -101,9 +101,7 @@ class QaVariableSaveRestore(unittest.TestCase):
             0,
             msg=f"grcc compilation failed.\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}",
         )
-        py_files = [
-            f for f in os.listdir(self._out_dir) if f.endswith(".py")
-        ]
+        py_files = [f for f in os.listdir(self._out_dir) if f.endswith(".py")]
         self.assertTrue(
             py_files,
             msg=f"grcc produced no .py file in {self._out_dir}",
@@ -131,9 +129,7 @@ class QaVariableSaveRestore(unittest.TestCase):
         )
 
     def _state_file(self):
-        return os.path.join(
-             self._state_dir, "saverestore", _FLOWGRAPH_ID + ".yml"
-    )
+        return os.path.join(self._state_dir, "saverestore", _FLOWGRAPH_ID + ".yml")
 
     def _load_state(self):
         """Read and parse the YAML state file; return as a dict."""
@@ -141,7 +137,7 @@ class QaVariableSaveRestore(unittest.TestCase):
         self.assertTrue(
             os.path.isfile(path),
             msg=f"Expected state file not found: {path}\n"
-                f"Contents of {self._state_dir}: {list(os.walk(self._state_dir))}",
+            f"Contents of {self._state_dir}: {list(os.walk(self._state_dir))}",
         )
         with open(path) as fh:
             return yaml.safe_load(fh) or {}
@@ -174,13 +170,14 @@ class QaVariableSaveRestore(unittest.TestCase):
         self._run(py_file)
 
         yaml_files = [
-            f for f in os.listdir(self._state_dir)
+            f
+            for f in os.listdir(self._state_dir)
             if f.endswith(".yaml") or f.endswith(".yml")
         ]
         self.assertTrue(
             yaml_files,
             msg=f"No YAML file created in GR_STATE_PATH={self._state_dir}\n"
-                f"Directory contents: {os.listdir(self._state_dir)}",
+            f"Directory contents: {os.listdir(self._state_dir)}",
         )
 
     def test_030_save_stores_correct_value(self):
@@ -268,8 +265,7 @@ class QaVariableSaveRestore(unittest.TestCase):
 
         state_path = self._state_file()
         self.assertTrue(
-            os.path.commonpath([state_path, self._state_dir])
-            == self._state_dir,
+            os.path.commonpath([state_path, self._state_dir]) == self._state_dir,
             msg=(
                 f"State file {state_path!r} was not written inside the "
                 f"expected GR_STATE_PATH={self._state_dir!r}."

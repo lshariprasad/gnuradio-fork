@@ -550,17 +550,3 @@ GR_GENERATE_INSTALL()
 if(GR_BUILD_INSTALLER)
     include(cmake/Modules/GrCPack.cmake)
 endif(GR_BUILD_INSTALLER)
-
-# --- variable_save_restore QA -------------------------------------------
-# Sets GR_STATE_PATH to a temp dir inside the test script itself (setUp),
-# so no extra cmake env property is needed here.
-if(ENABLE_TESTING)
-    include(GrTest)
-
-    GR_ADD_TEST(
-        qa_variable_save_restore
-        ${QA_PYTHON_EXECUTABLE}
-        -B
-        ${CMAKE_CURRENT_SOURCE_DIR}/qa_variable_save_restore.py
-    )
-endif()

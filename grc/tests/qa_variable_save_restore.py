@@ -30,7 +30,10 @@ import sys
 import tempfile
 import unittest
 
-import yaml  # PyYAML – always available in a GR Python env
+try:
+    import yaml
+except ImportError:
+    yaml = None  # PyYAML – always available in a GR Python env
 
 
 # ---------------------------------------------------------------------------
@@ -232,6 +235,8 @@ class QaVariableSaveRestore(unittest.TestCase):
         )
 
     def test_050_state_file_is_valid_yaml(self):
+        if yaml is None:
+            self.skipTest("PyYAML not available")
         """
         The written state file must be parseable YAML (not just any text).
         A corrupted or non-YAML file would fail silently at restore time.
